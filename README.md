@@ -1,4 +1,4 @@
-# test-kickoff-skill
+# 7 Yokais
 
 Projet de réalisation d'un jeu vidéo multijoueur similaire au jeu de cartes 7 Yokais.
 
