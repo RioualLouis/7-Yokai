@@ -29,6 +29,9 @@ public class Manche {
 	public Manche(List<Joueur> participants, Joueur dernierVainqueur, Aleatoire rng) throws Exception {
 		joueurs = participants;
 		
+		// Pour déterminer le premier joueur en cas de non pioche de l'atout.
+		Joueur premierJoueurReserve = null;
+		
 		for (Famille f : Famille.values()) {
 			for (int numero = f.getDebut() ; numero < f.getFin() ; numero++) {
 				pioche.add(new Carte(numero, f));
@@ -44,11 +47,12 @@ public class Manche {
 				
 				// Attribution du premier joueur si aucun gagnant précédent n'a été donné (première manche).
 				if (dernierVainqueur == null && (mainPiochee[i].getNum() == 1 && mainPiochee[i].getFamille() == Famille.VERT)) dernierVainqueur = joueur;
+				if (mainPiochee[i].getNum() == 13 && mainPiochee[i].getFamille() == Famille.BLEU) premierJoueurReserve = joueur;
 			}
 			joueur.constituerMain(mainPiochee);
 		}
 		
-		premierJoueur = joueurs.lastIndexOf(dernierVainqueur);
+		premierJoueur = (dernierVainqueur == null) ? joueurs.lastIndexOf(premierJoueurReserve) : joueurs.lastIndexOf(dernierVainqueur);
 		
 		// Détermination de l'atout
 		// Verification qu'une seule carte reste dans la pioche
@@ -103,6 +107,7 @@ public class Manche {
 		Equipe equipeGagnante = null;
 		Pli pliCourant;
 		
+		// Les plis s'enchainent tant qu'une condition de fin de manche n'est pas remplie.
 		while (conditionFin == 0) {
 			pliCourant = new Pli();
 			
@@ -113,10 +118,13 @@ public class Manche {
 			
 			nombrePlis++;
 			conditionFin = (nombrePlis < 12) ? finDeManche() : 3;
+			
+			premierJoueur = joueurs.indexOf(vainqueurPli);
 		}
 		
 		if (equipeGagnante == null) throw new Exception("Manche non conclue, absence de vainqueur.");
 		
+		// Attribution du point de manche en fonction de la condition de fin. 
 		switch (conditionFin) {
 		case 1 : for (Joueur j : joueurs) {
 			if (j.getEquipe().getBossGagnes() == 4) j.getEquipe().incrementerManchesGagnees();
@@ -128,8 +136,6 @@ public class Manche {
 		}
 		
 		return vainqueurPli;
-		
-		// TODO : COMMIT determination de l'atout et du premier joueur. Refonte du retour d'un pli et d'une manche.
 	}
 	
 	private int finDeManche() {
