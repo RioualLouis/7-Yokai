@@ -5,6 +5,7 @@ import java.util.List;
 public class Pli {
 	private int plusHaute = 0;
 	private int plusHauteAtout = 0;
+	private boolean asEnJeu = false;
 	private int nombreBoss = 0;
 	private Equipe vainqueur;
 	
@@ -91,17 +92,25 @@ public class Pli {
 		for (int i = 0 ; i < joueurs.size() ; i++) {
 			int indiceJoueur = (i + premierJoueur) % joueurs.size(); 
 			Joueur joueur = joueurs.get(indiceJoueur); 
-			int choix = joueur.getStrategie().choisirCarte();
 			
+			// Choix de la carte du joueur
+			int choix = joueur.getStrategie().choisirCarte();
 			Carte carteJouee =  joueur.getCarte(choix);
 			
 			int valeur = carteJouee.getNum();
 			
+			// Cas de l'As
+			if (valeur == 1 && carteJouee.getFamille() == Famille.VERT) {
+				attribuerVictoire(joueur.getEquipe());
+				asEnJeu = true;
+			}
+			
+			// Inrémenter le nombre de boss dans le pli si un a été ajouté.
 			if (valeur == 7) incrementerNbBoss();
 			
+			// Changer le maximum joué pendant cette manche et éventuellement attribuer une nouvelle équipe victorieuse.
 			boolean changementValeurMax = (carteJouee.getFamille() == atout) ? modifierPlusHauteAtout(valeur) : modifierPlusHaute(valeur);
-			
-			if (changementValeurMax) attribuerVictoire(joueur.getEquipe());
+			if (changementValeurMax && !asEnJeu) attribuerVictoire(joueur.getEquipe());
 		}
 		return vainqueur;
 	}
