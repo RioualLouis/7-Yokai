@@ -1,0 +1,88 @@
+/*!
+ * \file Joueur.java
+ * 
+ * Classe pour définir un joueur. Chque joueur possède une stratégie propre et fait 
+ * partie d'une équipe.
+ */
+
+package model;
+
+public class Joueur {
+	private static final int TAILLE_MAIN = 12;
+	
+	private final Strategie type;
+	private Equipe equipe;
+	private Carte[] main;
+	
+	/*!
+	 * \brief Constructeur d'un joueur.
+	 * 
+	 * \param jType Stratégie du joueur.
+	 * \param jEquipe Equipe à laquelle appartient le joueur
+	 * 
+	 * La main d'un joueur ne peut contenir que 12 cartes au maximum.
+	 */
+	public Joueur(Strategie jType, Equipe jEquipe) {
+		type = jType;
+		equipe = jEquipe;
+		main = new Carte[TAILLE_MAIN];
+	}
+	
+	/*!
+	 * \brief Accesseur de l'équipe du joueur.
+	 */
+	public Equipe getEquipe() {
+		return equipe;
+	}
+	
+	/*!
+	 * \brief Accesseur d'une carte à partir de son indice dans la main du joueur.
+	 * 
+	 * \param indice Indice de la carte voulue dans la main du joueur.
+	 */
+	public Carte getCarte(int indice) {
+		return main[indice];
+	}
+	
+	/*!
+	 * \brief Accesseur de la stratégie du joueur.
+	 */
+	public Strategie getStrategie() {
+		return type;
+	}
+	
+	/*!
+	 * \brief Constitue la main du joueur à partir d'une séléction de 12 cartes piochées.
+	 * 
+	 *  \param mainPiochee Selection de 12 cartes obtenue via la pioche.
+	 *  
+	 *  Les cartes sont triées en fonction de leur couleur (Vert < Bleu), puis de leur valeur.
+	 */
+	public void constituerMain(Carte[] mainPiochee) throws Exception {
+		if (mainPiochee.length != TAILLE_MAIN) throw new IllegalArgumentException("Nombre de cartes incorrect.");
+		
+		for (int i = 0 ; i < main.length ; i++) {
+			main[i] = mainPiochee[i];
+		}
+	}
+	
+	/*!
+	 * \brief Modifie une carte à un indice donné dans la main du joueur.
+	 * 
+	 * \param indice Indice de la carte à remplacer par la selection.
+	 * \param selection Nouvelle carte à insérer dans la main du joueur.
+	 */
+	public void remplacerCartes(int i, Carte selection) throws Exception {
+		if (i >= main.length) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
+		
+		if (main[i].getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
+		
+		main[i] = selection;
+	} 
+	
+	public void retirerCarte(int i) throws Exception {
+		if (i >= main.length) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
+		
+		main[i] = new Carte();
+	}
+}
