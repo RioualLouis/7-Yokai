@@ -7,12 +7,14 @@
 
 package model;
 
+import java.util.List;
+
 public class Joueur {
 	private static final int TAILLE_MAIN = 12;
 	
 	private final Strategie type;
 	private Equipe equipe;
-	private Carte[] main;
+	private List<Carte> main;
 	
 	/*!
 	 * \brief Constructeur d'un joueur.
@@ -25,7 +27,7 @@ public class Joueur {
 	public Joueur(Strategie jType, Equipe jEquipe) {
 		type = jType;
 		equipe = jEquipe;
-		main = new Carte[TAILLE_MAIN];
+		main = List.of();
 	}
 	
 	/*!
@@ -41,7 +43,7 @@ public class Joueur {
 	 * \param indice Indice de la carte voulue dans la main du joueur.
 	 */
 	public Carte getCarte(int indice) {
-		return main[indice];
+		return main.get(indice);
 	}
 	
 	/*!
@@ -61,8 +63,8 @@ public class Joueur {
 	public void constituerMain(Carte[] mainPiochee) throws Exception {
 		if (mainPiochee.length != TAILLE_MAIN) throw new IllegalArgumentException("Nombre de cartes incorrect.");
 		
-		for (int i = 0 ; i < main.length ; i++) {
-			main[i] = mainPiochee[i];
+		for (int i = 0 ; i < main.size() ; i++) {
+			main.add(mainPiochee[i]);
 		}
 	}
 	
@@ -73,16 +75,15 @@ public class Joueur {
 	 * \param selection Nouvelle carte à insérer dans la main du joueur.
 	 */
 	public void remplacerCartes(int i, Carte selection) throws Exception {
-		if (i >= main.length) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
+		if (i >= main.size()) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
 		
-		if (main[i].getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
+		if (main.get(i).getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
 		
-		main[i] = selection;
+		main.remove(i);
+		main.add(selection);
 	} 
 	
-	public void retirerCarte(int i) throws Exception {
-		if (i >= main.length) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
-		
-		main[i] = new Carte();
+	public void retirerCarte(int i) {
+		main.remove(i);
 	}
 }
