@@ -1,3 +1,9 @@
+/*!
+ * \file Pli.java
+ * 
+ * Gère l'organisation et le déroulement d'un pli.
+ */
+
 package model;
 
 import java.util.List;
@@ -81,6 +87,43 @@ public class Pli {
 	}
 	
 	/*!
+	 * \brief Filtre parmis les cartes du joueur pour retourner une liste d'indices jouables.
+	 * 
+	 *  \param joueur Joueur dont le tour est actif.
+	 *  \param famillePli Famille jouée par le premier joueur du pli.
+	 *  \param atout Famille atout lors de cette manche
+	 *  
+	 *  \return Une liste d'indices jouables dans le contexte du pli.
+	 */
+	private List<Integer> filtreChoix(Joueur joueur, Famille famillePli, Famille atout) {
+		List<Carte> mainJoueur = joueur.getMain();
+		List<Integer> indicesJouables = List.of();
+		
+		// Famille en cours check
+		if (famillePli != null) {
+			for (Carte carte : mainJoueur) {
+				if (carte.getFamille() == famillePli) indicesJouables.add(mainJoueur.indexOf(carte));
+			}
+			
+			if (indicesJouables.size() > 0) return indicesJouables;
+		}
+		
+		// Famille atout check
+		for (Carte carte : mainJoueur) {
+			if (carte.getFamille() == atout) indicesJouables.add(mainJoueur.indexOf(carte));
+		}
+		
+		if (indicesJouables.size() > 0) return indicesJouables;
+		
+		// Sinon on donne toute la main
+		for (Carte carte : mainJoueur) {
+			indicesJouables.add(mainJoueur.indexOf(carte));
+		}
+		
+		return indicesJouables;	 
+	}
+	
+	/*!
 	 * \brief Joue un pli complet.
 	 * 
 	 * \param joueurs Liste des participants.
@@ -89,15 +132,22 @@ public class Pli {
 	 * \return Le vainqueur du pli.
 	 */
 	public Joueur jouerPli(List<Joueur> joueurs, int premierJoueur, Famille atout) {
+		Famille famillePli = null;
+		
 		for (int i = 0 ; i < joueurs.size() ; i++) {
 			int indiceJoueur = (i + premierJoueur) % joueurs.size(); 
 			Joueur joueur = joueurs.get(indiceJoueur); 
 			
 			// Choix de la carte du joueur
-			int choix = joueur.getStrategie().choisirCarte();
+			List<Integer> indicesJouables = filtreChoix(joueur, famillePli, atout); 
+			
+			int choix = joueur.getStrategie().choisirCarte(indicesJouables);
 			Carte carteJouee =  joueur.getCarte(choix);
 			
 			int valeur = carteJouee.getNum();
+			
+			// Première carte du pli
+			if (famillePli == null) famillePli = carteJouee.getFamille();
 			
 			// Cas de l'As
 			if (valeur == 1 && carteJouee.getFamille() == Famille.VERT) {

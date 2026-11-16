@@ -47,6 +47,13 @@ public class Joueur {
 	}
 	
 	/*!
+	 * \brief Accesseur de la main du joueur
+	 */
+	public List<Carte> getMain() {
+		return main;
+	}
+	
+	/*!
 	 * \brief Accesseur de la stratégie du joueur.
 	 */
 	public Strategie getStrategie() {
