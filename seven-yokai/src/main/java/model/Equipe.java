@@ -11,6 +11,7 @@ public class Equipe {
 	private int bossGagnes = 0;
 	private int plisGagnes = 0;
 	private int manchesRemportees = 0;
+	private int nbMembres = 0;
 	
 	/*!
 	 * \brief Accesseur pour le nombre de boss gagnés par l'équipe
@@ -56,5 +57,19 @@ public class Equipe {
 	 */
 	public void incrementerManchesGagnees() {
 		manchesRemportees++;
+	}
+	
+	/*!
+	 * \brief Ajoute un membre à l'équipe.
+	 */
+	public void ajouteMembre() {
+		nbMembres++;
+	}
+	
+	/*!
+	 * \brief Accesseur nombre de membres de l'équipe.
+	 */
+	public int getNbMembres() {
+		return nbMembres;
 	}
 }
