@@ -26,8 +26,7 @@ public class Manche {
 	 * Le mélange des cartes utilise la graine de génération aléatoire de la partie pour la 
 	 * reproductivité des parties.
 	 */
-	public Manche(Famille atoutManche, List<Joueur> participants, Aleatoire rng) throws Exception {
-		atout = atoutManche;
+	public Manche(List<Joueur> participants, Joueur dernierVainqueur, Aleatoire rng) throws Exception {
 		joueurs = participants;
 		
 		for (Famille f : Famille.values()) {
@@ -42,9 +41,20 @@ public class Manche {
 		for (Joueur joueur : participants) {
 			for (int i = 0 ; i < mainPiochee.length ; i++) {
 				mainPiochee[i] = pioche.removeLast();
+				
+				// Attribution du premier joueur si aucun gagnant précédent n'a été donné (première manche).
+				if (dernierVainqueur == null && (mainPiochee[i].getNum() == 1 && mainPiochee[i].getFamille() == Famille.VERT)) dernierVainqueur = joueur;
 			}
 			joueur.constituerMain(mainPiochee);
 		}
+		
+		premierJoueur = joueurs.lastIndexOf(dernierVainqueur);
+		
+		// Détermination de l'atout
+		// Verification qu'une seule carte reste dans la pioche
+		if (pioche.size() != 1) throw new Exception("Distribution non-conforme : une seule carte doit rester dans la pioche (" + pioche.size() + " restantes).");
+		
+		atout = pioche.get(0).getFamille();
 	}
 	
 	/*!
@@ -86,24 +96,26 @@ public class Manche {
 	/*!
 	 * \brief Déroulé complet de la manche.
 	 */
-	public void jouerManche() throws Exception {
+	public Joueur jouerManche() throws Exception {
 		int nombrePlis = 0;
 		int conditionFin = 0;
-		Equipe resultat = null;
+		Joueur vainqueurPli = null;
+		Equipe equipeGagnante = null;
 		Pli pliCourant;
 		
 		while (conditionFin == 0) {
 			pliCourant = new Pli();
 			
-			resultat = pliCourant.jouerPli(joueurs, premierJoueur, atout);
+			vainqueurPli = pliCourant.jouerPli(joueurs, premierJoueur, atout);
+			equipeGagnante = vainqueurPli.getEquipe();
 			
-			resultat.attribuerPli(1);
+			equipeGagnante.attribuerPli(1);
 			
 			nombrePlis++;
 			conditionFin = (nombrePlis < 12) ? finDeManche() : 3;
 		}
 		
-		if (resultat == null) throw new Exception("Manche non conclue, absence de vainqueur.");
+		if (equipeGagnante == null) throw new Exception("Manche non conclue, absence de vainqueur.");
 		
 		switch (conditionFin) {
 		case 1 : for (Joueur j : joueurs) {
@@ -112,8 +124,12 @@ public class Manche {
 		case 2 : for (Joueur j : joueurs) {
 			if (j.getEquipe().getPlisGagnes() != 7) j.getEquipe().incrementerManchesGagnees();
 		}
-		case 3 : resultat.incrementerManchesGagnees();
+		case 3 : equipeGagnante.incrementerManchesGagnees();
 		}
+		
+		return vainqueurPli;
+		
+		// TODO : COMMIT determination de l'atout et du premier joueur. Refonte du retour d'un pli et d'une manche.
 	}
 	
 	private int finDeManche() {

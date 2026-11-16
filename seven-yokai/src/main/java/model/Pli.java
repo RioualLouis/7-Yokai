@@ -7,7 +7,7 @@ public class Pli {
 	private int plusHauteAtout = 0;
 	private boolean asEnJeu = false;
 	private int nombreBoss = 0;
-	private Equipe vainqueur;
+	private Joueur vainqueur;
 	
 	/*!
 	 * \brief Accesseur de la carte la plus haute du pli.
@@ -33,7 +33,7 @@ public class Pli {
 	/*!
 	 * \brief Accesseur du vainqueur du pli.
 	 */
-	public Equipe getVainqueur() {
+	public Joueur getVainqueur() {
 		return vainqueur;
 	}
 	
@@ -76,8 +76,8 @@ public class Pli {
 	/*!
 	 * \brief Attribue la victoire à l'équipe qui a posé la carte actuelle. 
 	 */
-	public void attribuerVictoire(Equipe equipeVictorieuse) {
-		vainqueur = equipeVictorieuse;
+	public void attribuerVictoire(Joueur joueurVictorieux) {
+		vainqueur = joueurVictorieux;
 	}
 	
 	/*!
@@ -88,7 +88,7 @@ public class Pli {
 	 * 
 	 * \return Le vainqueur du pli.
 	 */
-	public Equipe jouerPli(List<Joueur> joueurs, int premierJoueur, Famille atout) {
+	public Joueur jouerPli(List<Joueur> joueurs, int premierJoueur, Famille atout) {
 		for (int i = 0 ; i < joueurs.size() ; i++) {
 			int indiceJoueur = (i + premierJoueur) % joueurs.size(); 
 			Joueur joueur = joueurs.get(indiceJoueur); 
@@ -101,7 +101,7 @@ public class Pli {
 			
 			// Cas de l'As
 			if (valeur == 1 && carteJouee.getFamille() == Famille.VERT) {
-				attribuerVictoire(joueur.getEquipe());
+				attribuerVictoire(joueur);
 				asEnJeu = true;
 			}
 			
@@ -110,7 +110,9 @@ public class Pli {
 			
 			// Changer le maximum joué pendant cette manche et éventuellement attribuer une nouvelle équipe victorieuse.
 			boolean changementValeurMax = (carteJouee.getFamille() == atout) ? modifierPlusHauteAtout(valeur) : modifierPlusHaute(valeur);
-			if (changementValeurMax && !asEnJeu) attribuerVictoire(joueur.getEquipe());
+			if (changementValeurMax && !asEnJeu) {
+				attribuerVictoire(joueur);
+			}
 		}
 		return vainqueur;
 	}
