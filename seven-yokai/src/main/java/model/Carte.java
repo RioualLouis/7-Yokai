@@ -22,10 +22,23 @@ public class Carte {
 	}
 	
 	/*!
-	 * \brief Créé une carte e valeeur nulle, pour la gestion des erreurs. 
+	 * \brief Créé une carte e valeur nulle, pour la gestion des erreurs. 
 	 * */
 	public Carte() {
 		this(0, Famille.VERT);
+	}
+	
+	/*!
+	 * \brief Implément le test d'égalité entre deux cartes.
+	 * 
+	 *  \param o Objet à tester.
+	 *  
+	 *  \return Si ls deux objets sont égaux du point de vu des cartes.
+	 */
+	public boolean equals(Object o) {
+		if (!(o instanceof Carte)) return false;
+		
+		return ( (this.numero == ((Carte) o).numero) && (this.couleur == ((Carte) o).couleur) );
 	}
 	
 	/*!

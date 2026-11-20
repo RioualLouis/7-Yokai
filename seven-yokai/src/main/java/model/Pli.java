@@ -1,12 +1,20 @@
+/*!
+ * \file Pli.java
+ * 
+ * Gère l'organisation et le déroulement d'un pli.
+ */
+
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pli {
 	private int plusHaute = 0;
 	private int plusHauteAtout = 0;
+	private boolean asEnJeu = false;
 	private int nombreBoss = 0;
-	private Equipe vainqueur;
+	private Joueur vainqueur;
 	
 	/*!
 	 * \brief Accesseur de la carte la plus haute du pli.
@@ -32,7 +40,7 @@ public class Pli {
 	/*!
 	 * \brief Accesseur du vainqueur du pli.
 	 */
-	public Equipe getVainqueur() {
+	public Joueur getVainqueur() {
 		return vainqueur;
 	}
 	
@@ -75,8 +83,45 @@ public class Pli {
 	/*!
 	 * \brief Attribue la victoire à l'équipe qui a posé la carte actuelle. 
 	 */
-	public void attribuerVictoire(Equipe equipeVictorieuse) {
-		vainqueur = equipeVictorieuse;
+	public void attribuerVictoire(Joueur joueurVictorieux) {
+		vainqueur = joueurVictorieux;
+	}
+	
+	/*!
+	 * \brief Filtre parmis les cartes du joueur pour retourner une liste d'indices jouables.
+	 * 
+	 *  \param joueur Joueur dont le tour est actif.
+	 *  \param famillePli Famille jouée par le premier joueur du pli.
+	 *  \param atout Famille atout lors de cette manche
+	 *  
+	 *  \return Une liste d'indices jouables dans le contexte du pli.
+	 */
+	private List<Integer> filtreChoix(Joueur joueur, Famille famillePli, Famille atout) {
+		List<Carte> mainJoueur = joueur.getMain();
+		List<Integer> indicesJouables = new ArrayList<>();
+		
+		// Famille en cours check
+		if (famillePli != null) {
+			for (Carte carte : mainJoueur) {
+				if (carte.getFamille() == famillePli) indicesJouables.add(mainJoueur.indexOf(carte));
+			}
+			
+			if (indicesJouables.size() > 0) return indicesJouables;
+		}
+		
+		// Famille atout check
+		for (Carte carte : mainJoueur) {
+			if (carte.getFamille() == atout) indicesJouables.add(mainJoueur.indexOf(carte));
+		}
+		
+		if (indicesJouables.size() > 0) return indicesJouables;
+		
+		// Sinon on donne toute la main
+		for (Carte carte : mainJoueur) {
+			indicesJouables.add(mainJoueur.indexOf(carte));
+		}
+		
+		return indicesJouables;	 
 	}
 	
 	/*!
@@ -87,22 +132,47 @@ public class Pli {
 	 * 
 	 * \return Le vainqueur du pli.
 	 */
-	public Equipe jouerPli(List<Joueur> joueurs, int premierJoueur, Famille atout) {
+	public Joueur jouerPli(List<Joueur> joueurs, int premierJoueur, Famille atout) {
+		Famille famillePli = null;
+		
 		for (int i = 0 ; i < joueurs.size() ; i++) {
 			int indiceJoueur = (i + premierJoueur) % joueurs.size(); 
 			Joueur joueur = joueurs.get(indiceJoueur); 
-			int choix = joueur.getStrategie().choisirCarte();
 			
+			// Choix de la carte du joueur
+			List<Integer> indicesJouables = filtreChoix(joueur, famillePli, atout); 
+			
+			int choix = joueur.getStrategie().choisirCarte(indicesJouables);
 			Carte carteJouee =  joueur.getCarte(choix);
+			joueur.retirerCarte(choix);
 			
 			int valeur = carteJouee.getNum();
 			
+			// Première carte du pli
+			if (famillePli == null) famillePli = carteJouee.getFamille();
+			
+			// Cas de l'As
+			if (valeur == 1 && carteJouee.getFamille() == Famille.VERT) {
+				attribuerVictoire(joueur);
+				asEnJeu = true;
+			}
+			
+			// Inrémenter le nombre de boss dans le pli si un a été ajouté.
 			if (valeur == 7) incrementerNbBoss();
 			
-			boolean changementValeurMax = (carteJouee.getFamille() == atout) ? modifierPlusHauteAtout(valeur) : modifierPlusHaute(valeur);
-			
-			if (changementValeurMax) attribuerVictoire(joueur.getEquipe());
+			// Changer le maximum joué pendant cette manche et éventuellement attribuer une nouvelle équipe victorieuse.
+			if (carteJouee.getFamille() == atout) {
+				boolean changementValeurMax = modifierPlusHauteAtout(valeur);
+				if (changementValeurMax && !asEnJeu) attribuerVictoire(joueur);
+				
+			} else if (carteJouee.getFamille() == famillePli) {
+				boolean changementValeurMax = modifierPlusHaute(valeur);
+				if (changementValeurMax && !asEnJeu && plusHauteAtout == 0) attribuerVictoire(joueur);
+			}
 		}
+		// Les boss du pli reviennent à l'équipe du gagnant du pli.
+		vainqueur.getEquipe().attribuerBoss(nombreBoss);
+		
 		return vainqueur;
 	}
 }

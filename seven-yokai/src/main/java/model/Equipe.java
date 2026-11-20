@@ -11,6 +11,7 @@ public class Equipe {
 	private int bossGagnes = 0;
 	private int plisGagnes = 0;
 	private int manchesRemportees = 0;
+	private int nbMembres = 0;
 	
 	/*!
 	 * \brief Accesseur pour le nombre de boss gagnés par l'équipe
@@ -48,6 +49,7 @@ public class Equipe {
 	 * \param nombre Valeur à incrémenter au nombre de plis gagnés.
 	 */
 	public void attribuerPli(int nombre) {
+		if (nombre < 0) throw new IllegalArgumentException("Impossible d'ajouter un nombre de plis négatifs.");
 		plisGagnes += nombre;
 	}
 	
@@ -56,5 +58,28 @@ public class Equipe {
 	 */
 	public void incrementerManchesGagnees() {
 		manchesRemportees++;
+	}
+	
+	/*!
+	 * \brief Ajoute un membre à l'équipe.
+	 */
+	public void ajouteMembre() throws Exception {
+		if (nbMembres == 2) throw new IllegalStateException("Equipe pleine. Impossible d'ajouter un nouveau membre."); 
+		nbMembres++;
+	}
+	
+	/*!
+	 * \brief Accesseur nombre de membres de l'équipe.
+	 */
+	public int getNbMembres() {
+		return nbMembres;
+	}
+	
+	/*!
+	 * \brief Réinitialise les atributs dépendants du pli avant une nouvelle manche. 
+	 */
+	public void prepNouvelleManche() {
+		this.bossGagnes = 0;
+		this.plisGagnes = 0;
 	}
 }

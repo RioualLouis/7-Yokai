@@ -7,12 +7,15 @@
 
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Joueur {
 	private static final int TAILLE_MAIN = 12;
 	
 	private final Strategie type;
 	private Equipe equipe;
-	private Carte[] main;
+	private List<Carte> main;
 	
 	/*!
 	 * \brief Constructeur d'un joueur.
@@ -25,7 +28,7 @@ public class Joueur {
 	public Joueur(Strategie jType, Equipe jEquipe) {
 		type = jType;
 		equipe = jEquipe;
-		main = new Carte[TAILLE_MAIN];
+		main = new ArrayList<>();
 	}
 	
 	/*!
@@ -41,7 +44,14 @@ public class Joueur {
 	 * \param indice Indice de la carte voulue dans la main du joueur.
 	 */
 	public Carte getCarte(int indice) {
-		return main[indice];
+		return main.get(indice);
+	}
+	
+	/*!
+	 * \brief Accesseur de la main du joueur
+	 */
+	public List<Carte> getMain() {
+		return main;
 	}
 	
 	/*!
@@ -61,8 +71,28 @@ public class Joueur {
 	public void constituerMain(Carte[] mainPiochee) throws Exception {
 		if (mainPiochee.length != TAILLE_MAIN) throw new IllegalArgumentException("Nombre de cartes incorrect.");
 		
-		for (int i = 0 ; i < main.length ; i++) {
-			main[i] = mainPiochee[i];
+		for (int i = 0 ; i < TAILLE_MAIN ; i++) {
+			main.add(mainPiochee[i]);
+		}
+		
+		triMain(main);
+	}
+	
+	private void triMain(List<Carte> main) {
+		for (int i = 1 ; i < main.size() ; i++) {
+			Carte key = main.get(i);
+			int j = i - 1;
+			
+			while (j >= 0 && (
+					main.get(j).getFamille().getFin() > key.getFamille().getFin() || (
+						main.get(j).getFamille().getFin() == key.getFamille().getFin() &&
+						main.get(j).getNum() > key.getNum())
+					) 
+					) {
+				main.set(j + 1, main.get(j));
+				j--;
+			}
+			main.set(j + 1, key);
 		}
 	}
 	
@@ -73,16 +103,15 @@ public class Joueur {
 	 * \param selection Nouvelle carte à insérer dans la main du joueur.
 	 */
 	public void remplacerCartes(int i, Carte selection) throws Exception {
-		if (i >= main.length) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
+		if (i >= main.size()) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
 		
-		if (main[i].getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
+		if (main.get(i).getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
 		
-		main[i] = selection;
+		main.remove(i);
+		main.add(i, selection);
 	} 
 	
-	public void retirerCarte(int i) throws Exception {
-		if (i >= main.length) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
-		
-		main[i] = new Carte();
+	public void retirerCarte(int i) {
+		main.remove(i);
 	}
 }

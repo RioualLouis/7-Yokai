@@ -6,6 +6,8 @@
 
 package model;
 
+import java.util.List;
+
 public interface Strategie {
 	
 	/*!
@@ -20,5 +22,5 @@ public interface Strategie {
 	 * 
 	 *  \return Indice de la carte à jouer.
 	 */
-	public int choisirCarte();
+	public int choisirCarte(List<Integer> indicesJouables);
 }
