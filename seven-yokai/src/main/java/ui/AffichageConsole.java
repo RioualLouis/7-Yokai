@@ -1,6 +1,7 @@
 package ui;
 
 import model.Carte;
+import model.Famille;
 import model.Joueur;
 
 public class AffichageConsole implements ObservateurPartie {
@@ -13,7 +14,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void cartePosee(Joueur joueur, Carte carte) {
-		System.out.println(joueur + " joue la carte " + carte.getNum() + " " + carte.getFamille());
+		System.out.println(joueur.getName() + " joue la carte " + carte.getNum() + " " + carte.getFamille());
 	}
 	
 	/*!
@@ -23,16 +24,24 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void pliRemporte(Joueur joueur) {
-		System.out.println(joueur + " Remporte le pli !");
+		System.out.println(joueur.getName() + " Remporte le pli !\n");
 	}
 	
 	/*!
-	 * \brief Affiche le joueur gagnant de la manche dans la console.
-	 * 
-	 * \param joueur Joueur gagnant de la manche.
+	 * \brief Affiche la fin de la manche dans la console.
 	 */
 	@Override
-	public void mancheRemportee(Joueur joueur) {
-		System.out.println(joueur + " Remporte la manche !");
+	public void mancheRemportee() {
+		System.out.println("== Manche terminée ! ==\n");
+	}
+	
+	/*!
+	 * \brief Annonce l'atout pour cette manche.
+	 * 
+	 * \param atout La famille atout pour cette manche.
+	 */
+	@Override
+	public void atoutRevele(Famille atout) {
+		System.out.println("La famille atout pour cette manche est " + atout + " !");
 	}
 }

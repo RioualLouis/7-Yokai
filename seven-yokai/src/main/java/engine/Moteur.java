@@ -76,7 +76,7 @@ public class Moteur {
 	 * 
 	 * Le participant rejoint une équipe existante, ou en créé une nouvelle s'il n'y en a pas.
 	 */
-	public void ajouterParticipant() throws Exception {
+	public void ajouterParticipant(String nom) throws Exception {
 		Equipe equipeJoueur = null;
 		
 		for (Equipe equipe : equipes) {
@@ -92,7 +92,7 @@ public class Moteur {
 			equipes[nbEquipes++] = equipeJoueur;
 		}
 		
-		participants[nbParticipants++] = new Joueur(new BotAleatoire(rng), equipeJoueur);
+		participants[nbParticipants++] = new Joueur(new BotAleatoire(rng), equipeJoueur, nom);
 	}
 	
 	/*!
@@ -116,7 +116,7 @@ public class Moteur {
 		Joueur dernierVainqueur = null;
 		
 		while(!finPartie()) {
-			Manche mancheActuelle = new Manche(List.of(participants), dernierVainqueur, rng, observateurs);
+			Manche mancheActuelle = new Manche(List.of(participants), List.of(equipes), dernierVainqueur, rng, observateurs);
 			dernierVainqueur = mancheActuelle.jouerManche();
 			
 			for (Equipe equipe: equipes) {

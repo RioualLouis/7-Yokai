@@ -1,6 +1,7 @@
 package ui;
 
 import model.Carte;
+import model.Famille;
 import model.Joueur;
 
 public interface ObservateurPartie {
@@ -21,8 +22,13 @@ public interface ObservateurPartie {
 	
 	/*!
 	 * \brief Permet à un observateur de réaliser une action en cas de manche remportée.
-	 * 
-	 * \param vainqueur Joueur ayant remporté la manche.
 	 */
-	default void mancheRemportee(Joueur vainqueur) {}
+	default void mancheRemportee() {}
+	
+	/*!
+	 * \brief Permet à l'observateur de réaliser une action lorsque l'atout est révélé.
+	 * 
+	 * \param atout Famille atout pour cette manche.
+	 */
+	default void atoutRevele(Famille atout) {}
 }

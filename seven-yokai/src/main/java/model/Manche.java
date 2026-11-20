@@ -15,6 +15,7 @@ import ui.ObservateurPartie;
 public class Manche {
 	private final Famille atout;
 	private List<Joueur> joueurs;
+	private List<Equipe> equipes;
 	private int premierJoueur;
 	private List<Carte> pioche;
 	
@@ -30,8 +31,9 @@ public class Manche {
 	 * Le mélange des cartes utilise la graine de génération aléatoire de la partie pour la 
 	 * reproductivité des parties.
 	 */
-	public Manche(List<Joueur> participants, Joueur dernierVainqueur, Aleatoire rng, List<ObservateurPartie> obs) throws Exception {
+	public Manche(List<Joueur> participants, List<Equipe> equipes, Joueur dernierVainqueur, Aleatoire rng, List<ObservateurPartie> obs) throws Exception {
 		joueurs = participants;
+		this.equipes = equipes;
 		
 		this.observateurs = obs;
 		
@@ -59,6 +61,9 @@ public class Manche {
 		if (pioche.size() != 1) throw new Exception("Distribution non-conforme : une seule carte doit rester dans la pioche (" + pioche.size() + " restantes).");
 		
 		atout = pioche.get(0).getFamille();
+		
+		//OBSERVATEURS
+		observateurs.forEach(o -> o.atoutRevele(atout));
 	}
 	
 	/*!
@@ -149,19 +154,21 @@ public class Manche {
 		// Attribution du point de manche en fonction de la condition de fin. 
 		switch (conditionFin) {
 		case 1 -> {
-			for (Joueur j : joueurs) {
-				if (j.getEquipe().getBossGagnes() == 4) j.getEquipe().incrementerManchesGagnees();
+			for (Equipe e : equipes) {
+				if (e.getBossGagnes() == 4) e.incrementerManchesGagnees();
 			}
 		}
 		case 2 -> { 
-			for (Joueur j : joueurs) {
-				if (j.getEquipe().getPlisGagnes() != 7) j.getEquipe().incrementerManchesGagnees();
+			for (Equipe e : equipes) {
+				if (e.getPlisGagnes() != 7) e.incrementerManchesGagnees();
 			}
 		}
 		case 3 -> { 
 			equipeGagnante.incrementerManchesGagnees();
 		}
 		}
+		// Envoyer aux observateurs
+		observateurs.forEach(o -> o.mancheRemportee());
 		
 		return vainqueurPli;
 	}
@@ -170,9 +177,9 @@ public class Manche {
 		boolean cond1 = false;
 		boolean cond2 = false;
 		
-		for (Joueur j : joueurs) {
-			cond1 = cond1 || j.getEquipe().getBossGagnes() == 4;
-			cond2 = cond2 || j.getEquipe().getPlisGagnes() == 7;
+		for (Equipe e : equipes) {
+			cond1 = cond1 || e.getBossGagnes() == 4;
+			cond2 = cond2 || e.getPlisGagnes() == 7;
 		}
 		
 		if (cond1) return 1;
