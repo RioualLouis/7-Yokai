@@ -7,6 +7,7 @@
 
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Joueur {
@@ -27,7 +28,7 @@ public class Joueur {
 	public Joueur(Strategie jType, Equipe jEquipe) {
 		type = jType;
 		equipe = jEquipe;
-		main = List.of();
+		main = new ArrayList<>();
 	}
 	
 	/*!
@@ -70,8 +71,28 @@ public class Joueur {
 	public void constituerMain(Carte[] mainPiochee) throws Exception {
 		if (mainPiochee.length != TAILLE_MAIN) throw new IllegalArgumentException("Nombre de cartes incorrect.");
 		
-		for (int i = 0 ; i < main.size() ; i++) {
+		for (int i = 0 ; i < TAILLE_MAIN ; i++) {
 			main.add(mainPiochee[i]);
+		}
+		
+		triMain(main);
+	}
+	
+	private void triMain(List<Carte> main) {
+		for (int i = 1 ; i < main.size() ; i++) {
+			Carte key = main.get(i);
+			int j = i - 1;
+			
+			while (j >= 0 && (
+					main.get(j).getFamille().getFin() > key.getFamille().getFin() || (
+						main.get(j).getFamille().getFin() == key.getFamille().getFin() &&
+						main.get(j).getNum() > key.getNum())
+					) 
+					) {
+				main.set(j + 1, main.get(j));
+				j--;
+			}
+			main.set(j + 1, key);
 		}
 	}
 	
@@ -87,7 +108,7 @@ public class Joueur {
 		if (main.get(i).getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
 		
 		main.remove(i);
-		main.add(selection);
+		main.add(i, selection);
 	} 
 	
 	public void retirerCarte(int i) {

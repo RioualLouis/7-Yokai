@@ -1,3 +1,6 @@
 /.metadata/
 /docs/
 ./target/
+
+.obsidian/
+doxyfile

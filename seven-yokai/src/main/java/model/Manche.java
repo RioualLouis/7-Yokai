@@ -6,6 +6,7 @@
 
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import engine.Aleatoire;
@@ -14,7 +15,7 @@ public class Manche {
 	private final Famille atout;
 	private List<Joueur> joueurs;
 	private int premierJoueur;
-	private static List<Carte> pioche;
+	private List<Carte> pioche;
 	
 	/*!
 	 * \brief Constructeur d'une manche. Gère la préparation d'une manche, mélange les cartes 
@@ -32,13 +33,7 @@ public class Manche {
 		// Pour déterminer le premier joueur en cas de non pioche de l'atout.
 		Joueur premierJoueurReserve = null;
 		
-		for (Famille f : Famille.values()) {
-			for (int numero = f.getDebut() ; numero < f.getFin() ; numero++) {
-				pioche.add(new Carte(numero, f));
-			}
-		}
-		
-		melanger(rng);
+		pioche = buildPioche(rng);
 		
 		Carte[] mainPiochee = new Carte[12];
 		for (Joueur joueur : participants) {
@@ -62,11 +57,33 @@ public class Manche {
 	}
 	
 	/*!
+	 * \brief Construit un pioche utilisable.
+	 * 
+	 * \param rng L'aléatoire utilisé ppour la partie.
+	 * 
+	 * \return Une liste contenant toutes les cartes.
+	 */
+	private static List<Carte> buildPioche(Aleatoire rng) {
+		List<Carte> pioche = new ArrayList<>();
+		
+		for (Famille f : Famille.values()) {
+			for (int numero = f.getDebut() ; numero <= f.getFin() ; numero++) {
+				pioche.add(new Carte(numero, f));
+			}
+		}	
+		
+		melanger(pioche, rng);
+		
+		return pioche;
+	}
+	
+	/*!
 	 * \brief Mélange les cartes de la pioche en utilisant la méthode de Fisher-Yates.
 	 * 
+	 * \param pioche La listede carte à mélanger.
 	 * \param seed Graine de génération aléatoire de la partie.
 	 */
-	private static void melanger(Aleatoire rng) {
+	private static void melanger(List<Carte> pioche, Aleatoire rng) {
 		Carte tmp;
 		int j;
 		for (int i = pioche.size() - 1 ; i > 0 ; i--) {
@@ -126,13 +143,19 @@ public class Manche {
 		
 		// Attribution du point de manche en fonction de la condition de fin. 
 		switch (conditionFin) {
-		case 1 : for (Joueur j : joueurs) {
-			if (j.getEquipe().getBossGagnes() == 4) j.getEquipe().incrementerManchesGagnees();
+		case 1 -> {
+			for (Joueur j : joueurs) {
+				if (j.getEquipe().getBossGagnes() == 4) j.getEquipe().incrementerManchesGagnees();
+			}
 		}
-		case 2 : for (Joueur j : joueurs) {
-			if (j.getEquipe().getPlisGagnes() != 7) j.getEquipe().incrementerManchesGagnees();
+		case 2 -> { 
+			for (Joueur j : joueurs) {
+				if (j.getEquipe().getPlisGagnes() != 7) j.getEquipe().incrementerManchesGagnees();
+			}
 		}
-		case 3 : equipeGagnante.incrementerManchesGagnees();
+		case 3 -> { 
+			equipeGagnante.incrementerManchesGagnees();
+		}
 		}
 		
 		return vainqueurPli;

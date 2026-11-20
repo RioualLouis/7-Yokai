@@ -6,6 +6,7 @@
 
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pli {
@@ -97,7 +98,7 @@ public class Pli {
 	 */
 	private List<Integer> filtreChoix(Joueur joueur, Famille famillePli, Famille atout) {
 		List<Carte> mainJoueur = joueur.getMain();
-		List<Integer> indicesJouables = List.of();
+		List<Integer> indicesJouables = new ArrayList<>();
 		
 		// Famille en cours check
 		if (famillePli != null) {
@@ -143,6 +144,7 @@ public class Pli {
 			
 			int choix = joueur.getStrategie().choisirCarte(indicesJouables);
 			Carte carteJouee =  joueur.getCarte(choix);
+			joueur.retirerCarte(choix);
 			
 			int valeur = carteJouee.getNum();
 			
@@ -159,11 +161,18 @@ public class Pli {
 			if (valeur == 7) incrementerNbBoss();
 			
 			// Changer le maximum joué pendant cette manche et éventuellement attribuer une nouvelle équipe victorieuse.
-			boolean changementValeurMax = (carteJouee.getFamille() == atout) ? modifierPlusHauteAtout(valeur) : modifierPlusHaute(valeur);
-			if (changementValeurMax && !asEnJeu) {
-				attribuerVictoire(joueur);
+			if (carteJouee.getFamille() == atout) {
+				boolean changementValeurMax = modifierPlusHauteAtout(valeur);
+				if (changementValeurMax && !asEnJeu) attribuerVictoire(joueur);
+				
+			} else if (carteJouee.getFamille() == famillePli) {
+				boolean changementValeurMax = modifierPlusHaute(valeur);
+				if (changementValeurMax && !asEnJeu && plusHauteAtout == 0) attribuerVictoire(joueur);
 			}
 		}
+		// Les boss du pli reviennent à l'équipe du gagnant du pli.
+		vainqueur.getEquipe().attribuerBoss(nombreBoss);
+		
 		return vainqueur;
 	}
 }
