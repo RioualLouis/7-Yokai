@@ -14,7 +14,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void cartePosee(Joueur joueur, Carte carte) {
-		System.out.println(joueur.getName() + " joue la carte " + carte.getNum() + " " + carte.getFamille());
+		System.out.println(StringFormat.joueur(joueur.getName()) + StringFormat.std(" joue la carte ") + carte.getNum() + " " + StringFormat.famille(carte.getFamille()));
 	}
 	
 	/*!
@@ -24,7 +24,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void pliRemporte(Joueur joueur) {
-		System.out.println(joueur.getName() + " Remporte le pli !\n");
+		System.out.println(StringFormat.joueur(joueur.getName()) + StringFormat.std(" Remporte le pli !\n"));
 	}
 	
 	/*!
@@ -32,7 +32,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void mancheRemportee() {
-		System.out.println("== Manche terminée ! ==\n");
+		System.out.println(StringFormat.emph("== Manche terminée ! ==\n"));
 	}
 	
 	/*!
@@ -42,6 +42,6 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void atoutRevele(Famille atout) {
-		System.out.println("La famille atout pour cette manche est " + atout + " !");
+		System.out.println(StringFormat.std("La famille atout pour cette manche est ") + StringFormat.famille(atout) + StringFormat.std(" !"));
 	}
 }
