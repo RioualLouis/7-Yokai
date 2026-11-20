@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import engine.Aleatoire;
+import ui.ObservateurPartie;
 
 public class Manche {
 	private final Famille atout;
 	private List<Joueur> joueurs;
 	private int premierJoueur;
 	private List<Carte> pioche;
+	
+	private List<ObservateurPartie> observateurs;
 	
 	/*!
 	 * \brief Constructeur d'une manche. Gère la préparation d'une manche, mélange les cartes 
@@ -27,8 +30,10 @@ public class Manche {
 	 * Le mélange des cartes utilise la graine de génération aléatoire de la partie pour la 
 	 * reproductivité des parties.
 	 */
-	public Manche(List<Joueur> participants, Joueur dernierVainqueur, Aleatoire rng) throws Exception {
+	public Manche(List<Joueur> participants, Joueur dernierVainqueur, Aleatoire rng, List<ObservateurPartie> obs) throws Exception {
 		joueurs = participants;
+		
+		this.observateurs = obs;
 		
 		// Pour déterminer le premier joueur en cas de non pioche de l'atout.
 		Joueur premierJoueurReserve = null;
@@ -126,7 +131,7 @@ public class Manche {
 		
 		// Les plis s'enchainent tant qu'une condition de fin de manche n'est pas remplie.
 		while (conditionFin == 0) {
-			pliCourant = new Pli();
+			pliCourant = new Pli(this.observateurs);
 			
 			vainqueurPli = pliCourant.jouerPli(joueurs, premierJoueur, atout);
 			equipeGagnante = vainqueurPli.getEquipe();

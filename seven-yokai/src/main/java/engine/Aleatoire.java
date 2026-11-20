@@ -8,7 +8,6 @@
 package engine;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class Aleatoire {
 	private final long seed;

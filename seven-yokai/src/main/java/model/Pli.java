@@ -9,12 +9,20 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import ui.ObservateurPartie;
+
 public class Pli {
 	private int plusHaute = 0;
 	private int plusHauteAtout = 0;
 	private boolean asEnJeu = false;
 	private int nombreBoss = 0;
 	private Joueur vainqueur;
+	
+	private List<ObservateurPartie> observateurs;
+	
+	public Pli(List<ObservateurPartie> obs) {
+		this.observateurs = obs;
+	}
 	
 	/*!
 	 * \brief Accesseur de la carte la plus haute du pli.
@@ -146,6 +154,9 @@ public class Pli {
 			Carte carteJouee =  joueur.getCarte(choix);
 			joueur.retirerCarte(choix);
 			
+			// Envoi aux observateurs :
+			this.observateurs.forEach(o -> o.cartePosee(joueur, carteJouee));
+			
 			int valeur = carteJouee.getNum();
 			
 			// Première carte du pli
@@ -172,6 +183,9 @@ public class Pli {
 		}
 		// Les boss du pli reviennent à l'équipe du gagnant du pli.
 		vainqueur.getEquipe().attribuerBoss(nombreBoss);
+		
+		// Envoi aux observateurs :
+		this.observateurs.forEach(o -> o.pliRemporte(this.vainqueur));
 		
 		return vainqueur;
 	}
