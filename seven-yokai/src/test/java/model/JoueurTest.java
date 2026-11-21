@@ -12,7 +12,7 @@ class JoueurTest {
 
 	@BeforeEach
 	void setUp() {
-		joueur = new Joueur(mock(Strategie.class), new Equipe());
+		joueur = new Joueur(mock(Strategie.class), new Equipe(), "J0");
 		cartes = new Carte[12];
 		// Ordre volontairement désordonné : BLEU avant VERT, valeurs décroissantes.
 		for (int i = 0; i < 6; i++) cartes[i] = new Carte(13 - i, Famille.BLEU);

@@ -1,11 +1,13 @@
 package engine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bot.BotAleatoire;
 import model.Equipe;
 import model.Joueur;
 import model.Manche;
+import ui.ObservateurPartie;
 
 public class Moteur {
 	private Joueur[] participants = new Joueur[4];
@@ -13,6 +15,8 @@ public class Moteur {
 	private Equipe[] equipes = new Equipe[2];
 	private int nbEquipes = 0;
 	private Aleatoire rng;
+	
+	private List<ObservateurPartie> observateurs = new ArrayList<ObservateurPartie>();
 	
 	public Moteur(Aleatoire rng) {
 		this.rng = rng;
@@ -59,11 +63,20 @@ public class Moteur {
 	}
 	
 	/*!
+	 * \brief Ajoute un observateur à la partie.
+	 * 
+	 * \param observateur Un objet de type observateur à ajouter.
+	 */
+	public void attacher(ObservateurPartie observateur) {
+		observateurs.add(observateur);
+	}
+	
+	/*!
 	 * \brief Ajoute un participant à la partie.
 	 * 
 	 * Le participant rejoint une équipe existante, ou en créé une nouvelle s'il n'y en a pas.
 	 */
-	public void ajouterParticipant() throws Exception {
+	public void ajouterParticipant(String nom) throws Exception {
 		Equipe equipeJoueur = null;
 		
 		for (Equipe equipe : equipes) {
@@ -79,7 +92,7 @@ public class Moteur {
 			equipes[nbEquipes++] = equipeJoueur;
 		}
 		
-		participants[nbParticipants++] = new Joueur(new BotAleatoire(rng), equipeJoueur);
+		participants[nbParticipants++] = new Joueur(new BotAleatoire(rng), equipeJoueur, nom);
 	}
 	
 	/*!
@@ -103,7 +116,7 @@ public class Moteur {
 		Joueur dernierVainqueur = null;
 		
 		while(!finPartie()) {
-			Manche mancheActuelle = new Manche(List.of(participants), dernierVainqueur, rng);
+			Manche mancheActuelle = new Manche(List.of(participants), List.of(equipes), dernierVainqueur, rng, observateurs);
 			dernierVainqueur = mancheActuelle.jouerManche();
 			
 			for (Equipe equipe: equipes) {

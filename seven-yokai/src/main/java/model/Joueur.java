@@ -12,7 +12,16 @@ import java.util.List;
 
 public class Joueur {
 	private static final int TAILLE_MAIN = 12;
+	public static final String[] TROMBINOSCOPE = {
+			"Jerry",
+			"Aristourte",
+			"Luminoux",
+			"Pti'Louis",
+			"Galapagos",
+			"Guimauve",
+	};
 	
+	private String name;
 	private final Strategie type;
 	private Equipe equipe;
 	private List<Carte> main;
@@ -25,10 +34,18 @@ public class Joueur {
 	 * 
 	 * La main d'un joueur ne peut contenir que 12 cartes au maximum.
 	 */
-	public Joueur(Strategie jType, Equipe jEquipe) {
+	public Joueur(Strategie jType, Equipe jEquipe, String inputName) {
+		this.name = inputName;
 		type = jType;
 		equipe = jEquipe;
 		main = new ArrayList<>();
+	}
+	
+	/*!
+	 * \brief Accesseur du nom du joueur.
+	 */
+	public String getName() {
+		return this.name;
 	}
 	
 	/*!

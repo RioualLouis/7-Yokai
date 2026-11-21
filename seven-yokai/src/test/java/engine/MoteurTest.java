@@ -12,14 +12,14 @@ class MoteurTest {
 	void ajouterQuatreParticipants() {
 		Moteur moteur = new Moteur(new Aleatoire(42));
 		assertDoesNotThrow(() -> {
-			for (int i = 0; i < 4; i++) moteur.ajouterParticipant();
+			for (int i = 0; i < 4; i++) moteur.ajouterParticipant("J" + i);
 		});
 	}
 
 	@Test
 	void unePartieRenvoieDeuxGagnantsDeLaMemeEquipe() throws Exception {
 		Moteur moteur = new Moteur(new Aleatoire(42));
-		for (int i = 0; i < 4; i++) moteur.ajouterParticipant();
+		for (int i = 0; i < 4; i++) moteur.ajouterParticipant("J" + i);
 		Joueur[] gagnants = moteur.lancerPartie();
 		assertEquals(2, gagnants.length);
 		assertNotNull(gagnants[0]);

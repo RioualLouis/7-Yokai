@@ -35,28 +35,28 @@ class PliTest {
 	void jouerPliNePlantePas() {
 		List<Joueur> js = table(new Carte(3, Famille.VERT), new Carte(4, Famille.VERT),
 				new Carte(5, Famille.VERT), new Carte(6, Famille.VERT));
-		assertDoesNotThrow(() -> new Pli().jouerPli(js, 0, Famille.ROUGE));
+		assertDoesNotThrow(() -> new Pli(List.of()).jouerPli(js, 0, Famille.ROUGE));
 	}
 
 	@Test
 	void unAtoutBatUneCarteHauteDeLaFamilleDemandee() {
 		List<Joueur> js = table(new Carte(4, Famille.JAUNE), new Carte(6, Famille.ROUGE),
 				new Carte(10, Famille.JAUNE), new Carte(5, Famille.JAUNE));
-		assertSame(js.get(1), new Pli().jouerPli(js, 0, Famille.ROUGE));
+		assertSame(js.get(1), new Pli(List.of()).jouerPli(js, 0, Famille.ROUGE));
 	}
 
 	@Test
 	void uneCarteHorsFamilleEtHorsAtoutNeGagnePas() {
 		List<Joueur> js = table(new Carte(3, Famille.VERT), new Carte(13, Famille.BLEU),
 				new Carte(2, Famille.VERT), new Carte(4, Famille.VERT));
-		assertSame(js.get(3), new Pli().jouerPli(js, 0, Famille.ROUGE));
+		assertSame(js.get(3), new Pli(List.of()).jouerPli(js, 0, Famille.ROUGE));
 	}
 
 	@Test
 	void lesCartesJoueesQuittentLaMain() {
 		List<Joueur> js = table(new Carte(3, Famille.VERT), new Carte(4, Famille.VERT),
 				new Carte(5, Famille.VERT), new Carte(6, Famille.VERT));
-		new Pli().jouerPli(js, 0, Famille.ROUGE);
+		new Pli(List.of()).jouerPli(js, 0, Famille.ROUGE);
 		for (Joueur j : js) verify(j).retirerCarte(0);
 	}
 
@@ -64,7 +64,7 @@ class PliTest {
 	void lesBossSontAttribuesALEquipeGagnante() {
 		List<Joueur> js = table(new Carte(7, Famille.VERT), new Carte(2, Famille.VERT),
 				new Carte(3, Famille.VERT), new Carte(4, Famille.VERT));
-		Joueur vainqueur = new Pli().jouerPli(js, 0, Famille.ROUGE);
+		Joueur vainqueur = new Pli(List.of()).jouerPli(js, 0, Famille.ROUGE);
 		assertEquals(1, vainqueur.getEquipe().getBossGagnes());
 	}
 }
