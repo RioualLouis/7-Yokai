@@ -14,7 +14,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void cartePosee(Joueur joueur, Carte carte) {
-		System.out.println(StringFormat.joueur(joueur.getName()) + StringFormat.std(" joue la carte ") + carte.getNum() + " " + StringFormat.famille(carte.getFamille()));
+		System.out.println(StringFormat.joueur(joueur.getName()) + StringFormat.std(" joue la carte ") + carte.num() + " " + StringFormat.famille(carte.famille()));
 	}
 	
 	/*!

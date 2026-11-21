@@ -111,7 +111,7 @@ public class Pli {
 		// Famille en cours check
 		if (famillePli != null) {
 			for (Carte carte : mainJoueur) {
-				if (carte.getFamille() == famillePli) indicesJouables.add(mainJoueur.indexOf(carte));
+				if (carte.famille() == famillePli) indicesJouables.add(mainJoueur.indexOf(carte));
 			}
 			
 			if (indicesJouables.size() > 0) return indicesJouables;
@@ -119,7 +119,7 @@ public class Pli {
 		
 		// Famille atout check
 		for (Carte carte : mainJoueur) {
-			if (carte.getFamille() == atout) indicesJouables.add(mainJoueur.indexOf(carte));
+			if (carte.famille() == atout) indicesJouables.add(mainJoueur.indexOf(carte));
 		}
 		
 		if (indicesJouables.size() > 0) return indicesJouables;
@@ -157,13 +157,13 @@ public class Pli {
 			// Envoi aux observateurs :
 			this.observateurs.forEach(o -> o.cartePosee(joueur, carteJouee));
 			
-			int valeur = carteJouee.getNum();
+			int valeur = carteJouee.num();
 			
 			// Première carte du pli
-			if (famillePli == null) famillePli = carteJouee.getFamille();
+			if (famillePli == null) famillePli = carteJouee.famille();
 			
 			// Cas de l'As
-			if (valeur == 1 && carteJouee.getFamille() == Famille.VERT) {
+			if (valeur == 1 && carteJouee.famille() == Famille.VERT) {
 				attribuerVictoire(joueur);
 				asEnJeu = true;
 			}
@@ -172,11 +172,11 @@ public class Pli {
 			if (valeur == 7) incrementerNbBoss();
 			
 			// Changer le maximum joué pendant cette manche et éventuellement attribuer une nouvelle équipe victorieuse.
-			if (carteJouee.getFamille() == atout) {
+			if (carteJouee.famille() == atout) {
 				boolean changementValeurMax = modifierPlusHauteAtout(valeur);
 				if (changementValeurMax && !asEnJeu) attribuerVictoire(joueur);
 				
-			} else if (carteJouee.getFamille() == famillePli) {
+			} else if (carteJouee.famille() == famillePli) {
 				boolean changementValeurMax = modifierPlusHaute(valeur);
 				if (changementValeurMax && !asEnJeu && plusHauteAtout == 0) attribuerVictoire(joueur);
 			}

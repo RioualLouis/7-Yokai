@@ -9,8 +9,8 @@ class CarteTest {
 	@Test
 	void accesseurs() {
 		Carte c = new Carte(5, Famille.ROSE);
-		assertEquals(5, c.getNum());
-		assertEquals(Famille.ROSE, c.getFamille());
+		assertEquals(5, c.num());
+		assertEquals(Famille.ROSE, c.famille());
 	}
 
 	@Test

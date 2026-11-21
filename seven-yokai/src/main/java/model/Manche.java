@@ -48,8 +48,8 @@ public class Manche {
 				mainPiochee[i] = pioche.removeLast();
 				
 				// Attribution du premier joueur si aucun gagnant précédent n'a été donné (première manche).
-				if (dernierVainqueur == null && (mainPiochee[i].getNum() == 1 && mainPiochee[i].getFamille() == Famille.VERT)) dernierVainqueur = joueur;
-				if (mainPiochee[i].getNum() == 13 && mainPiochee[i].getFamille() == Famille.BLEU) premierJoueurReserve = joueur;
+				if (dernierVainqueur == null && (mainPiochee[i].num() == 1 && mainPiochee[i].famille() == Famille.VERT)) dernierVainqueur = joueur;
+				if (mainPiochee[i].num() == 13 && mainPiochee[i].famille() == Famille.BLEU) premierJoueurReserve = joueur;
 			}
 			joueur.constituerMain(mainPiochee);
 		}
@@ -60,7 +60,7 @@ public class Manche {
 		// Verification qu'une seule carte reste dans la pioche
 		if (pioche.size() != 1) throw new Exception("Distribution non-conforme : une seule carte doit rester dans la pioche (" + pioche.size() + " restantes).");
 		
-		atout = pioche.get(0).getFamille();
+		atout = pioche.get(0).famille();
 		
 		//OBSERVATEURS
 		observateurs.forEach(o -> o.atoutRevele(atout));

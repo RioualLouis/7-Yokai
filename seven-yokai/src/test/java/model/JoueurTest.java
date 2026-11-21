@@ -28,8 +28,8 @@ class JoueurTest {
 	@Test
 	void constituerMainTrieLaMain() throws Exception {
 		joueur.constituerMain(cartes);
-		assertEquals(Famille.VERT, joueur.getCarte(0).getFamille());
-		assertEquals(2, joueur.getCarte(0).getNum());
+		assertEquals(Famille.VERT, joueur.getCarte(0).famille());
+		assertEquals(2, joueur.getCarte(0).num());
 	}
 
 	@Test

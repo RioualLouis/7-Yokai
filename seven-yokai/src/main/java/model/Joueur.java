@@ -101,9 +101,9 @@ public class Joueur {
 			int j = i - 1;
 			
 			while (j >= 0 && (
-					main.get(j).getFamille().getFin() > key.getFamille().getFin() || (
-						main.get(j).getFamille().getFin() == key.getFamille().getFin() &&
-						main.get(j).getNum() > key.getNum())
+					main.get(j).famille().getFin() > key.famille().getFin() || (
+						main.get(j).famille().getFin() == key.famille().getFin() &&
+						main.get(j).num() > key.num())
 					) 
 					) {
 				main.set(j + 1, main.get(j));
@@ -122,7 +122,7 @@ public class Joueur {
 	public void remplacerCartes(int i, Carte selection) throws Exception {
 		if (i >= main.size()) throw new ArrayIndexOutOfBoundsException("Indice hors limites");
 		
-		if (main.get(i).getNum() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
+		if (main.get(i).num() == 0) throw new NullPointerException("Aucune carte à cet emplacement dans la main.");
 		
 		main.remove(i);
 		main.add(i, selection);
