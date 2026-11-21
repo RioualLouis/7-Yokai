@@ -6,7 +6,6 @@
 
 package model;
 
-import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class Pli {
 	private boolean asEnJeu = false;
 	private int nombreBoss = 0;
 	private Joueur vainqueur;
-	private List<Carte> PliEnCours;
+	private List<Carte> PliEnCours = new ArrayList<Carte>();
 	
 	private List<ObservateurPartie> observateurs;
 	

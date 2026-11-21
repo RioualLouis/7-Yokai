@@ -13,11 +13,12 @@ import engine.Aleatoire;
 import ui.ObservateurPartie;
 
 public class Manche {
-	private final Famille atout;
+	private final Carte atout;
 	private List<Joueur> joueurs;
 	private List<Equipe> equipes;
 	private int premierJoueur;
 	private List<Carte> pioche;
+	private List<Pli> historique = new ArrayList<Pli>();
 	
 	private List<ObservateurPartie> observateurs;
 	
@@ -60,7 +61,7 @@ public class Manche {
 		// Verification qu'une seule carte reste dans la pioche
 		if (pioche.size() != 1) throw new Exception("Distribution non-conforme : une seule carte doit rester dans la pioche (" + pioche.size() + " restantes).");
 		
-		atout = pioche.get(0).famille();
+		atout = pioche.get(0);
 		
 		//OBSERVATEURS
 		observateurs.forEach(o -> o.atoutRevele(atout));
@@ -105,6 +106,22 @@ public class Manche {
 	}
 	
 	/*!
+	 * \brief Accesseur pour la carte atout de la manche en cours.
+	 */
+	public Carte getAtout() {
+		return this.atout;
+	}
+
+	/*!
+	 * \brief Accesseur pour les équipes participant à la manche.
+	 */
+	public List<Equipe> getEquipes() {
+		List<Equipe> res = new ArrayList<Equipe>();
+		res.addAll(equipes);
+		return res;
+	}
+	
+	/*!
 	 * \brief Échange les cartes de deux joueurs lors de la phase préliminaire de la manche.
 	 * 
 	 * \param j1 Premier joueur.
@@ -138,12 +155,13 @@ public class Manche {
 		while (conditionFin == 0) {
 			pliCourant = new Pli(this.observateurs);
 			
-			vainqueurPli = pliCourant.jouerPli(joueurs, premierJoueur, atout);
+			vainqueurPli = pliCourant.jouerPli(joueurs, premierJoueur, atout.famille());
 			equipeGagnante = vainqueurPli.getEquipe();
 			
 			equipeGagnante.attribuerPli(1);
 			
 			nombrePlis++;
+			historique.add(pliCourant);
 			conditionFin = (nombrePlis < 12) ? finDeManche() : 3;
 			
 			premierJoueur = joueurs.indexOf(vainqueurPli);

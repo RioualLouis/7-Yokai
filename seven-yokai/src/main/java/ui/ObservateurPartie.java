@@ -1,7 +1,6 @@
 package ui;
 
 import model.Carte;
-import model.Famille;
 import model.Joueur;
 
 public interface ObservateurPartie {
@@ -30,5 +29,5 @@ public interface ObservateurPartie {
 	 * 
 	 * \param atout Famille atout pour cette manche.
 	 */
-	default void atoutRevele(Famille atout) {}
+	default void atoutRevele(Carte atout) {}
 }
