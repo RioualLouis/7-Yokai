@@ -9,6 +9,15 @@ public record VueJoueur(Phase phase, int idJoueur, int idPartenaire, List<String
 		List<Integer> indicesJouables, int valeurAtout, Famille couleurAtout, Famille familePli,
 		List<CartePosee> pliCourant, List<PliTermine> historique, Score scoreEquipe, Score scoreAdverse) {
 
+	// Permet au liste entrées d'être non modifiables
+	public VueJoueur {
+		noms = List.copyOf(noms);
+		main = List.copyOf(main);
+		indicesJouables = List.copyOf(indicesJouables);
+		pliCourant = List.copyOf(pliCourant);
+		historique = List.copyOf(historique);
+	}
+
 	public enum Phase {
 		ECHANGE, JEU
 	}
