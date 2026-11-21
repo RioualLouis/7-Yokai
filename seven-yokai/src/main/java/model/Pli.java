@@ -6,6 +6,7 @@
 
 package model;
 
+import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Pli {
 	private boolean asEnJeu = false;
 	private int nombreBoss = 0;
 	private Joueur vainqueur;
+	private List<Carte> PliEnCours;
 	
 	private List<ObservateurPartie> observateurs;
 	
@@ -89,6 +91,26 @@ public class Pli {
 	}
 	
 	/*!
+	 * \brief Ajoute la carte en haut du pli en cours.
+	 * 
+	 * \param carte Carte à ajouter.
+	 */
+	private void ajouterCartePli(Carte carte) {
+		PliEnCours.add(carte);
+	}
+	
+	/*!
+	 * \brief Donne une copie du pli en cours.
+	 * 
+	 * \return La copie du plis en cours.
+	 */
+	public List<Carte> getPliEnCours() {
+		List<Carte> res = new ArrayList<Carte>();
+		res.addAll(PliEnCours);
+		return res;
+	}
+	
+	/*!
 	 * \brief Attribue la victoire à l'équipe qui a posé la carte actuelle. 
 	 */
 	public void attribuerVictoire(Joueur joueurVictorieux) {
@@ -156,6 +178,8 @@ public class Pli {
 			
 			// Envoi aux observateurs :
 			this.observateurs.forEach(o -> o.cartePosee(joueur, carteJouee));
+			
+			ajouterCartePli(carteJouee);
 			
 			int valeur = carteJouee.num();
 			
