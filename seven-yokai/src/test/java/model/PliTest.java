@@ -60,6 +60,7 @@ class PliTest {
 		assertSame(js.get(3), new Pli(List.of()).jouerPli(mock(Manche.class)));
 	}
 
+	@Deprecated
 	@Test
 	void lesCartesJoueesQuittentLaMain() {
 		List<Joueur> js = table(new Carte(3, Famille.VERT), new Carte(4, Famille.VERT), new Carte(5, Famille.VERT),
