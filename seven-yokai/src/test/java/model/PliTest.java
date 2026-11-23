@@ -38,11 +38,13 @@ class PliTest {
 		return js;
 	}
 
+	@Deprecated
 	@Test
 	void jouerPliNePlantePas() {
 		assertDoesNotThrow(() -> new Pli(List.of()).jouerPli(mock(Manche.class)));
 	}
 
+	@Deprecated
 	@Test
 	void unAtoutBatUneCarteHauteDeLaFamilleDemandee() {
 		List<Joueur> js = table(new Carte(4, Famille.JAUNE), new Carte(6, Famille.ROUGE), new Carte(10, Famille.JAUNE),
@@ -50,6 +52,7 @@ class PliTest {
 		assertSame(js.get(1), new Pli(List.of()).jouerPli(mock(Manche.class)));
 	}
 
+	@Deprecated
 	@Test
 	void uneCarteHorsFamilleEtHorsAtoutNeGagnePas() {
 		List<Joueur> js = table(new Carte(3, Famille.VERT), new Carte(13, Famille.BLEU), new Carte(2, Famille.VERT),
@@ -66,6 +69,7 @@ class PliTest {
 			verify(j).retirerCarte(0);
 	}
 
+	@Deprecated
 	@Test
 	void lesBossSontAttribuesALEquipeGagnante() {
 		Joueur vainqueur = new Pli(List.of()).jouerPli(mock(Manche.class));
