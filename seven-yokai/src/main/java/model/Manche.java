@@ -73,13 +73,23 @@ public class Manche {
 		// OBSERVATEURS
 		observateurs.forEach(o -> o.atoutRevele(atout));
 
-		// TODO : Organiser l'échange de cartes entre les joueurs.
+		// Échange de cartes entre les joueurs.
 		for (Equipe equipe : equipes) {
 			int[] indicesTeamMate1 = equipe.getSlot1().getStrategie().choisirCartesEchange();
 			int[] indicesTeamMate2 = equipe.getSlot2().getStrategie().choisirCartesEchange();
 
-		}
+			Carte[] tmp = new Carte[3];
+			for (int i = 0; i < indicesTeamMate1.length; i++)
+				tmp[i] = equipe.getSlot1().getMain().get(indicesTeamMate1[i]);
 
+			// Remplacer les cartes du joueur 1
+			for (int i = 0; i < indicesTeamMate1.length; i++)
+				equipe.getSlot1().remplacerCarte(indicesTeamMate1[i], equipe.getSlot2().getCarte(indicesTeamMate2[i]));
+
+			// Remplacer les cartes du joueur 2
+			for (int i = 0; i < indicesTeamMate2.length; i++)
+				equipe.getSlot2().remplacerCarte(indicesTeamMate2[i], tmp[i]);
+		}
 	}
 
 	/*
