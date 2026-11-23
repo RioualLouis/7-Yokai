@@ -1,7 +1,6 @@
 package ui;
 
 import model.Carte;
-import model.Famille;
 import model.Joueur;
 
 public class AffichageConsole implements ObservateurPartie {
@@ -14,7 +13,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 */
 	@Override
 	public void cartePosee(Joueur joueur, Carte carte) {
-		System.out.println(StringFormat.joueur(joueur.getName()) + StringFormat.std(" joue la carte ") + carte.getNum() + " " + StringFormat.famille(carte.getFamille()));
+		System.out.println(StringFormat.joueur(joueur.getName()) + StringFormat.std(" joue la carte ") + carte.num() + " " + StringFormat.famille(carte.famille()));
 	}
 	
 	/*!
@@ -41,7 +40,7 @@ public class AffichageConsole implements ObservateurPartie {
 	 * \param atout La famille atout pour cette manche.
 	 */
 	@Override
-	public void atoutRevele(Famille atout) {
-		System.out.println(StringFormat.std("La famille atout pour cette manche est ") + StringFormat.famille(atout) + StringFormat.std(" !"));
+	public void atoutRevele(Carte atout) {
+		System.out.println(StringFormat.std("La famille atout pour cette manche est : ") + atout.num() + StringFormat.famille(atout.famille()));
 	}
 }

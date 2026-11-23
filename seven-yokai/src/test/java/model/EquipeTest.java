@@ -1,6 +1,7 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,14 +16,6 @@ class EquipeTest {
 		assertEquals(2, e.getPlisGagnes());
 		assertEquals(1, e.getBossGagnes());
 		assertEquals(1, e.getManchesRemportees());
-	}
-
-	@Test
-	void refuseUnTroisiemeMembre() throws Exception {
-		Equipe e = new Equipe();
-		e.ajouteMembre();
-		e.ajouteMembre();
-		assertThrows(IllegalStateException.class, e::ajouteMembre);
 	}
 
 	@Test

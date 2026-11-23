@@ -1,6 +1,7 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +13,13 @@ class JoueurTest {
 
 	@BeforeEach
 	void setUp() {
-		joueur = new Joueur(mock(Strategie.class), new Equipe(), "J0");
+		joueur = new Joueur(0, mock(Strategie.class), new Equipe(), "J0");
 		cartes = new Carte[12];
 		// Ordre volontairement désordonné : BLEU avant VERT, valeurs décroissantes.
-		for (int i = 0; i < 6; i++) cartes[i] = new Carte(13 - i, Famille.BLEU);
-		for (int i = 6; i < 12; i++) cartes[i] = new Carte(13 - i, Famille.VERT);
+		for (int i = 0; i < 6; i++)
+			cartes[i] = new Carte(13 - i, Famille.BLEU);
+		for (int i = 6; i < 12; i++)
+			cartes[i] = new Carte(13 - i, Famille.VERT);
 	}
 
 	@Test
@@ -28,8 +31,8 @@ class JoueurTest {
 	@Test
 	void constituerMainTrieLaMain() throws Exception {
 		joueur.constituerMain(cartes);
-		assertEquals(Famille.VERT, joueur.getCarte(0).getFamille());
-		assertEquals(2, joueur.getCarte(0).getNum());
+		assertEquals(Famille.VERT, joueur.getCarte(0).famille());
+		assertEquals(2, joueur.getCarte(0).num());
 	}
 
 	@Test
