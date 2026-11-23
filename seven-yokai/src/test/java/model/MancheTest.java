@@ -29,6 +29,7 @@ class MancheTest {
 		assertDoesNotThrow(() -> new Manche(joueurs, equipes, null, new Aleatoire(42), List.of()));
 	}
 
+	@Deprecated
 	@Test
 	void chaqueJoueurRecoitDouzeCartes() throws Exception {
 		new Manche(joueurs, equipes, null, new Aleatoire(42), List.of());
@@ -36,6 +37,7 @@ class MancheTest {
 			assertEquals(12, j.getMain().size());
 	}
 
+	@Deprecated
 	@Test
 	void deuxManchesSuccessivesSontPossibles() {
 		// La pioche statique ne doit pas conserver les cartes de la manche précédente.

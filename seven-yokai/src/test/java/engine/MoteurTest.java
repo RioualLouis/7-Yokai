@@ -22,6 +22,7 @@ class MoteurTest {
 		});
 	}
 
+	@Deprecated
 	@Test
 	void unePartieRenvoieDeuxGagnantsDeLaMemeEquipe() throws Exception {
 		Moteur moteur = new Moteur(new Aleatoire(42));
