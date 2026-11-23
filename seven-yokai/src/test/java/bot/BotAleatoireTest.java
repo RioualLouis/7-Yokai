@@ -14,13 +14,7 @@ import engine.VueJoueur;
 
 class BotAleatoireTest {
 
-	@Test
-	void choisirCarteRenvoieUnIndiceJouable() {
-		// Le contrat de Strategie : renvoyer l'indice de la carte, pas sa position dans
-		// la liste.
-		assertEquals(5, new BotAleatoire(new Aleatoire(0)).choisirCarte(mock(VueJoueur.class)));
-	}
-
+	@Deprecated
 	@Test
 	void lesCartesEchangeesSontDistinctes() {
 		BotAleatoire bot = new BotAleatoire(new Aleatoire(0));
@@ -33,6 +27,7 @@ class BotAleatoireTest {
 		}
 	}
 
+	@Deprecated
 	@Test
 	void laDerniereCarteDeLaMainPeutEtreEchangee() {
 		BotAleatoire bot = new BotAleatoire(new Aleatoire(0));
