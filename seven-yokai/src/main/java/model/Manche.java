@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import engine.Aleatoire;
+import engine.VueJoueur.PliTermine;
 import ui.ObservateurPartie;
 
 public class Manche {
@@ -18,7 +19,7 @@ public class Manche {
 	private List<Equipe> equipes;
 	private int premierJoueur;
 	private List<Carte> pioche;
-	private List<Pli> historique = new ArrayList<Pli>();
+	private List<PliTermine> historique = new ArrayList<PliTermine>();
 
 	private List<ObservateurPartie> observateurs;
 
@@ -74,6 +75,8 @@ public class Manche {
 		observateurs.forEach(o -> o.atoutRevele(atout));
 
 		// Échange de cartes entre les joueurs.
+		// Construction de la vue pour le joueur.
+		// VueJoueur vueJoueur = VueJoueur.pour()
 		for (Equipe equipe : equipes) {
 			int[] indicesTeamMate1 = equipe.getSlot1().getStrategie().choisirCartesEchange();
 			int[] indicesTeamMate2 = equipe.getSlot2().getStrategie().choisirCartesEchange();
@@ -139,12 +142,26 @@ public class Manche {
 	}
 
 	/*
+	 * ! \brief Accesseur pour la liste des joueurs.
+	 */
+	public List<Joueur> getParticipants() {
+		return List.copyOf(joueurs);
+	}
+
+	/*
 	 * ! \brief Accesseur pour les équipes participant à la manche.
 	 */
 	public List<Equipe> getEquipes() {
 		List<Equipe> res = new ArrayList<Equipe>();
 		res.addAll(equipes);
 		return res;
+	}
+
+	/*
+	 * ! \brief Accesseur de l'historique des plis.
+	 */
+	public List<PliTermine> getHistorique() {
+		return this.historique;
 	}
 
 	/*
@@ -188,7 +205,8 @@ public class Manche {
 			equipeGagnante.attribuerPli(1);
 
 			nombrePlis++;
-			historique.add(pliCourant);
+			historique
+					.add(new PliTermine(pliCourant.getPliEnCours(), vainqueurPli.getId(), pliCourant.getNombreBoss()));
 			conditionFin = (nombrePlis < 12) ? finDeManche() : 3;
 
 			premierJoueur = joueurs.indexOf(vainqueurPli);

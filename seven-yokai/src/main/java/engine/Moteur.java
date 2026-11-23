@@ -104,7 +104,7 @@ public class Moteur {
 		default -> throw new IllegalArgumentException("Unexpected value: " + nbParticipants);
 		}
 
-		Joueur joueur = new Joueur(type, equipe, nom);
+		Joueur joueur = new Joueur(nbParticipants, type, equipe, nom);
 		equipe.ajouteMembre(joueur, slot);
 		participants[nbParticipants++] = joueur;
 	}

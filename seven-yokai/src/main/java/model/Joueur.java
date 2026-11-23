@@ -15,6 +15,7 @@ public class Joueur {
 	public static final String[] TROMBINOSCOPE = { "Jerry", "Aristourte", "Luminoux", "Pti'Louis", "Galapagos",
 			"Guimauve", };
 
+	private int id;
 	private String name;
 	private final Strategie type;
 	private Equipe equipe;
@@ -28,11 +29,18 @@ public class Joueur {
 	 * 
 	 * La main d'un joueur ne peut contenir que 12 cartes au maximum.
 	 */
-	public Joueur(Strategie jType, Equipe jEquipe, String inputName) {
+	public Joueur(int id, Strategie jType, Equipe jEquipe, String inputName) {
 		this.name = inputName;
 		type = jType;
 		equipe = jEquipe;
 		main = new ArrayList<>();
+	}
+
+	/*
+	 * ! \brief Accesseur de l'identifiant du joueur.
+	 */
+	public int getId() {
+		return this.id;
 	}
 
 	/*
