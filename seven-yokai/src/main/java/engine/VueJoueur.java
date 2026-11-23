@@ -39,7 +39,7 @@ public record VueJoueur(Phase phase, int idJoueur, int idPartenaire, List<String
 	public static VueJoueur construireVue(int idJoueur, Phase phase, Manche manche, Pli pli,
 			List<Integer> indicesJouables) {
 		List<Joueur> participants = manche.getParticipants();
-		int idPartenaire = (idJoueur + 2) % 4;
+		int idPartenaire = (idJoueur + 2) % participants.size();
 		List<String> noms = new ArrayList<String>();
 		for (Joueur joueur : participants)
 			noms.add(joueur.getName());
@@ -50,7 +50,7 @@ public record VueJoueur(Phase phase, int idJoueur, int idPartenaire, List<String
 		List<CartePosee> pliCourant = pli.getPliEnCours();
 		List<PliTermine> historique = manche.getHistorique();
 		Equipe equipeJoueur = participants.get(idJoueur).getEquipe();
-		Equipe equipeAdverse = participants.get(idJoueur + 1).getEquipe();
+		Equipe equipeAdverse = participants.get((idJoueur + 1) % participants.size()).getEquipe();
 		Score scoreEquipe = new Score(equipeJoueur.getPlisGagnes(), equipeJoueur.getBossGagnes(),
 				equipeJoueur.getManchesRemportees());
 		Score scoreAdverse = new Score(equipeAdverse.getPlisGagnes(), equipeAdverse.getBossGagnes(),

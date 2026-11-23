@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import engine.Aleatoire;
+import engine.VueJoueur;
+import engine.VueJoueur.Phase;
 import engine.VueJoueur.PliTermine;
 import ui.ObservateurPartie;
 
@@ -76,22 +78,8 @@ public class Manche {
 
 		// Échange de cartes entre les joueurs.
 		// Construction de la vue pour le joueur.
-		// VueJoueur vueJoueur = VueJoueur.pour()
 		for (Equipe equipe : equipes) {
-			int[] indicesTeamMate1 = equipe.getSlot1().getStrategie().choisirCartesEchange();
-			int[] indicesTeamMate2 = equipe.getSlot2().getStrategie().choisirCartesEchange();
-
-			Carte[] tmp = new Carte[3];
-			for (int i = 0; i < indicesTeamMate1.length; i++)
-				tmp[i] = equipe.getSlot1().getMain().get(indicesTeamMate1[i]);
-
-			// Remplacer les cartes du joueur 1
-			for (int i = 0; i < indicesTeamMate1.length; i++)
-				equipe.getSlot1().remplacerCarte(indicesTeamMate1[i], equipe.getSlot2().getCarte(indicesTeamMate2[i]));
-
-			// Remplacer les cartes du joueur 2
-			for (int i = 0; i < indicesTeamMate2.length; i++)
-				equipe.getSlot2().remplacerCarte(indicesTeamMate2[i], tmp[i]);
+			echangerCartes(equipe.getSlot1(), equipe.getSlot2());
 		}
 	}
 
@@ -149,6 +137,13 @@ public class Manche {
 	}
 
 	/*
+	 * ! \brief Accesseur pour le premier jour de la manche.
+	 */
+	public int getPremierJoueur() {
+		return this.premierJoueur;
+	}
+
+	/*
 	 * ! \brief Accesseur pour les équipes participant à la manche.
 	 */
 	public List<Equipe> getEquipes() {
@@ -173,15 +168,25 @@ public class Manche {
 	 * Le choix des cartes à échanger appartient à la stratégie propre au joueur.
 	 */
 	public void echangerCartes(Joueur j1, Joueur j2) throws Exception {
-		int[] choixJ1 = j1.getStrategie().choisirCartesEchange();
-		int[] choixJ2 = j2.getStrategie().choisirCartesEchange();
-		Carte tmp;
+		VueJoueur vueJ1 = VueJoueur.construireVue(j1.getId(), Phase.ECHANGE, this, new Pli(this.observateurs),
+				List.of());
+		VueJoueur vueJ2 = VueJoueur.construireVue(j2.getId(), Phase.ECHANGE, this, new Pli(this.observateurs),
+				List.of());
 
-		for (int i = 0; i < 3; i++) {
-			tmp = j1.getCarte(choixJ1[i]);
-			j1.remplacerCartes(choixJ1[i], j2.getCarte(choixJ2[i]));
-			j2.remplacerCartes(choixJ2[i], tmp);
-		}
+		int[] indicesTeamMate1 = j1.getStrategie().choisirCartesEchange(vueJ1);
+		int[] indicesTeamMate2 = j2.getStrategie().choisirCartesEchange(vueJ2);
+
+		Carte[] tmp = new Carte[3];
+		for (int i = 0; i < indicesTeamMate1.length; i++)
+			tmp[i] = j1.getMain().get(indicesTeamMate1[i]);
+
+		// Remplacer les cartes du joueur 1
+		for (int i = 0; i < indicesTeamMate1.length; i++)
+			j1.remplacerCarte(indicesTeamMate1[i], j2.getCarte(indicesTeamMate2[i]));
+
+		// Remplacer les cartes du joueur 2
+		for (int i = 0; i < indicesTeamMate2.length; i++)
+			j2.remplacerCarte(indicesTeamMate2[i], tmp[i]);
 	}
 
 	/*
@@ -199,7 +204,7 @@ public class Manche {
 		while (conditionFin == 0) {
 			pliCourant = new Pli(this.observateurs);
 
-			vainqueurPli = pliCourant.jouerPli(joueurs, premierJoueur, atout.famille());
+			vainqueurPli = pliCourant.jouerPli(this);
 			equipeGagnante = vainqueurPli.getEquipe();
 
 			equipeGagnante.attribuerPli(1);

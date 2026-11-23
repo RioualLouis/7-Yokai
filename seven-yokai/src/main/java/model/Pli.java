@@ -9,7 +9,9 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import engine.VueJoueur;
 import engine.VueJoueur.CartePosee;
+import engine.VueJoueur.Phase;
 import ui.ObservateurPartie;
 
 public class Pli {
@@ -169,7 +171,10 @@ public class Pli {
 	 * 
 	 * \return Le vainqueur du pli.
 	 */
-	public Joueur jouerPli(List<Joueur> joueurs, int premierJoueur, Famille atout) {
+	public Joueur jouerPli(Manche manche) {
+		List<Joueur> joueurs = manche.getParticipants();
+		int premierJoueur = manche.getPremierJoueur();
+		Famille atout = manche.getAtout().famille();
 		Famille famillePli = null;
 
 		for (int i = 0; i < joueurs.size(); i++) {
@@ -179,7 +184,9 @@ public class Pli {
 			// Choix de la carte du joueur
 			List<Integer> indicesJouables = filtreChoix(joueur, famillePli, atout);
 
-			int choix = joueur.getStrategie().choisirCarte(indicesJouables);
+			// Créer la vue du joueur pour qu'il fasse son choix
+			VueJoueur vue = VueJoueur.construireVue(indiceJoueur, Phase.JEU, manche, this, indicesJouables);
+			int choix = joueur.getStrategie().choisirCarte(vue);
 			Carte carteJouee = joueur.getCarte(choix);
 			joueur.retirerCarte(choix);
 
