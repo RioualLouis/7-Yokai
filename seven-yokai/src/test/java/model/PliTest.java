@@ -38,10 +38,47 @@ class PliTest {
 		return js;
 	}
 
+	private static Joueur joueurMult() throws Exception {
+		Joueur j = new Joueur(0, mock(Strategie.class), mock(Equipe.class), "Dummy");
+		Carte[] mainCartes = new Carte[12];
+		mainCartes[0] = new Carte(1, Famille.BLEU);
+		for (int i = 2; i < 13; i++)
+			mainCartes[i - 1] = new Carte(i, Famille.GRIS);
+		j.constituerMain(mainCartes);
+		return j;
+	}
+
 	@Deprecated
 	@Test
 	void jouerPliNePlantePas() {
 		assertDoesNotThrow(() -> new Pli(List.of()).jouerPli(mock(Manche.class)));
+	}
+
+	@Test
+	void selectionDeCartePasExclusifAtoutPremierJoueur() throws Exception {
+		Pli p = new Pli(List.of());
+		Joueur j = joueurMult();
+		List<Integer> selection = p.filtreChoix(j, null, Famille.BLEU);
+
+		assertEquals(12, selection.size());
+	}
+
+	@Test
+	void selectionDeCarteRestreintFamilleCourante() throws Exception {
+		Pli p = new Pli(List.of());
+		Joueur j = joueurMult();
+		List<Integer> selection = p.filtreChoix(j, Famille.GRIS, Famille.BLEU);
+
+		assertEquals(11, selection.size());
+	}
+
+	@Test
+	void selectionDeCarteRestreintAtout() throws Exception {
+		Pli p = new Pli(List.of());
+		Joueur j = joueurMult();
+		List<Integer> selection = p.filtreChoix(j, Famille.ROSE, Famille.BLEU);
+
+		assertEquals(1, selection.size());
 	}
 
 	@Deprecated
