@@ -131,7 +131,7 @@ public class Pli {
 	 * 
 	 * \return Une liste d'indices jouables dans le contexte du pli.
 	 */
-	public List<Integer> filtreChoix(Joueur joueur, Famille famillePli, Famille atout) {
+	private List<Integer> filtreChoix(Joueur joueur, Famille famillePli, Famille atout) {
 		List<Carte> mainJoueur = joueur.getMain();
 		List<Integer> indicesJouables = new ArrayList<>();
 
