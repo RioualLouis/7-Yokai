@@ -135,8 +135,9 @@ public class Pli {
 		List<Carte> mainJoueur = joueur.getMain();
 		List<Integer> indicesJouables = new ArrayList<>();
 
-		// Famille en cours check
+		// Si premier joueur, on joute tout
 		if (famillePli != null) {
+			// Famille en cours check
 			for (Carte carte : mainJoueur) {
 				if (carte.famille() == famillePli)
 					indicesJouables.add(mainJoueur.indexOf(carte));
@@ -144,17 +145,16 @@ public class Pli {
 
 			if (indicesJouables.size() > 0)
 				return indicesJouables;
+
+			// Famille atout check
+			for (Carte carte : mainJoueur) {
+				if (carte.famille() == atout)
+					indicesJouables.add(mainJoueur.indexOf(carte));
+			}
+
+			if (indicesJouables.size() > 0)
+				return indicesJouables;
 		}
-
-		// Famille atout check
-		for (Carte carte : mainJoueur) {
-			if (carte.famille() == atout)
-				indicesJouables.add(mainJoueur.indexOf(carte));
-		}
-
-		if (indicesJouables.size() > 0)
-			return indicesJouables;
-
 		// Sinon on donne toute la main
 		for (Carte carte : mainJoueur) {
 			indicesJouables.add(mainJoueur.indexOf(carte));

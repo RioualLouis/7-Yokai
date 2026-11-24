@@ -6,7 +6,7 @@ import ui.AffichageConsole;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		Aleatoire random = new Aleatoire(42);
+		Aleatoire random = new Aleatoire();
 		Moteur moteurDeJeu = new Moteur(random);
 
 		String[] pseudosBot = new String[4];
